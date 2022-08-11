@@ -1,0 +1,237 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- end header section -->
+
+
+  <!-- food section -->
+  <section class="food_section layout_padding-bottom">
+    <div class="container">
+      <div class="heading_container heading_center">
+        <h2 style="color: white;">
+          Our Menu
+        </h2>
+      </div>
+
+      <ul class="filters_menu">
+        <li class="active" data-filter="*">All</li>
+        <li data-filter=".burger">Burger</li>
+        <li data-filter=".pizza">Pizza</li>
+        <li data-filter=".pasta">Pasta</li>
+        <li data-filter=".fries">Fries</li>
+      </ul>
+<!-- menular qismi boshi -->
+     <div class="filters-content">
+        <div class="row grid">
+          {% for mahsulot in page %}
+          
+          <div class="col-sm-6 col-lg-4 all pizza">
+            
+            <div class="box">
+              <div>
+                <div class="img-box">
+                  
+                  <img src="{{ mahsulot.mahsulot_rasmi.url }}" alt="">
+                
+                </div>
+                <div class="detail-box">
+                  <h5>{{ mahsulot.mahsulot_nomi }}</h5>
+                  <p id='soz'>
+                    {{ mahsulot.mahsulot_tarkibi }}
+                  </p>
+                  <!-- <div class="options">  shu divdan boshlab uchiring -->
+<!-- Savat icon ni uchirib o'rniga shart bilan knopkalarimizni joylashtiramiz -->
+<div class="">
+<hr>
+{% if user.is_authenticated %}
+<!-- bu qismi js ni kodlari uchun mahsulot idsini olishimiz uchun -->
+  <button data-product='{{ mahsulot.id }}' data-action='add'  class="btn btn-outline-secondary add-btn update-cart" id="button Add to Cartadd">Add to Cart
+    </button>
+<a class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal-{{ forloop.counter }}">View</a>
+<h4 style="display: inline-block; float: right">
+  <strong>
+    ${{ mahsulot.mahsulot_narxi }}
+  </strong>
+</h4>
+
+{% else %}
+<a href="{% url 'login' %}">
+  <button id="buttonadd">
+  Add to Cart
+  </button>
+</a>
+<a class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal-{{ forloop.counter }}">View</a>
+<h4 style="display: inline-block; float: right">
+  <strong>
+  ${{ mahsulot.mahsulot_narxi }}
+  </strong>
+</h4>
+{% endif %}
+<!-- 5-bosqich js kodlaridan foydalanish -->
+<!-- ADD CART bosilsa savatga qushamiz js yaratamiz -->
+<!-- statsic papkasi ichida js papkasini ichiga cart.js fayl yaratmiz va base.htmlga usha faylni ulab quyamiz -->
+
+                    
+<!-- Tugash qismi -->                 
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+           {% endfor %}
+        </div>
+      </div>
+   <br>
+        <div class="col-md-6">
+            <div class="col-12 my-5">
+              <nav aria-label="Page Navigation">
+                   {% if page.has_previous %}
+                    <a href="{% url 'menu'%}?page={{page.previous_page_number }}"><button type="button" id='button'>Oldingi sahifa</button></a>
+                      {% endif %} | 
+                      {% if page.has_next %}
+                    <a href="{% url 'menu' %}?page={{page.next_page_number}}"><button type="button" id='button'>Keyingi sahifa</button></a>
+                      {%endif%}
+                      <style type="text/css">
+                        #button { 
+                              margin-top: 15px;
+                              border: none;
+                              text-transform: uppercase;
+                              display: inline-block;
+                              padding: 10px 55px;
+                              background-color: #ffbe33;
+                              color: #ffffff;
+                              border-radius: 45px;
+                              -webkit-transition: all 0.3s;
+                              transition: all 0.3s;
+                              border: none;
+                        }
+               </style> 
+              </nav>
+            </div>
+          </div>
+
+<!-- Mahsulotlarni qalqib chiqadigan card hosil qilish -->
+<style>
+  .modal-header {
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+  }
+  .modal-dialog {
+    max-width: 250px;
+  }
+  .modal-content {
+    width: 139%;
+    
+  }
+  .close {
+    position: absolute;
+    top: ;
+    right: 16px;
+  }
+</style>
+
+{% for mahsulot in page %}
+<div class="modal fade" id="exampleModal-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-{{ forloop.counter }}
+" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <img src="{{ mahsulot.mahsulot_rasmi.url }}" alt="" width="150">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3>{{ mahsulot.mahsulot_nomi }}</h3>
+        <p>{{ mahsulot.mahsulot_tarkibi }}</p>
+        <div>
+          <span class="price">${{ mahsulot.mahsulot_narxi }}</span>
+          <div>
+            <i></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<!-- Tugash qismi -->
+
+
+    </div>
+  </section>
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+<!-- 
+{% for mahsulot in page %}
+
+<div class="modal fade" id="exampleModal-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-{{ forloop.counter }}
+" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel-{{ forloop.counter }}"> {{ mahsulot.mahsulot_nomi }}</h5> 
+        <img src="{{ mahsulot.mahsulot_rasmi.url }}" alt="" width="150">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3>{{ mahsulot.mahsulot_nomi }}</h3>
+        <p>{{ mahsulot.mahsulot_tarkibi }}</p>
+        <div>
+          <span>{{ mahsulot.mahsulot_narxi }}</span>
+          <div>
+            <i></i>
+          </div>
+        </div>
+      </div>
+   
+    </div>
+  </div>
+</div>
+{% endfor %} -->
+
+
+
+
+<!-- 
+
+{% for mahsulot in page %}
+
+          <div class="modal fade" id="exampleModal-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-{{ forloop.counter }}
+" aria-hidden="true">
+            
+            <div class="box">
+              <div>
+                <div class="img-box">
+                  
+                  <img src="{{ mahsulot.mahsulot_rasmi.url }}" alt="">
+                
+                </div>
+                <div class="detail-box">
+                  <a href="#" data-toggle="modal" data-target="#exampleModal-{{ forloop.counter }}"><h5>{{ mahsulot.mahsulot_nomi }}</h5></a>
+                  <p id='soz'>
+                    {{ mahsulot.mahsulot_tarkibi }}
+                  </p>
+                  <div class="options">
+                    <h6>
+                      ${{ mahsulot.mahsulot_narxi }}
+                    </h6>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+{% endfor %} -->
